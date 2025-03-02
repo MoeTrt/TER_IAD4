@@ -34,6 +34,14 @@ def compute_utility(vote, vecE):
     """
     return compute_satisfaction(vote, vecE) + compute_dissatisfaction(vote, vecE)
 
+def leximin_sort(scores):
+    """
+    Trie une liste de scores selon le critère Leximin.
+    :param scores: Liste de listes représentant les scores des extensions.
+    :return: Liste triée selon Leximin.
+    """
+    return sorted(scores, key=lambda x: tuple(x))  # Tri lexicographique
+
 def compute_distance(votes, vecE, aggregation, metric):
     """
     Calcule la distance d'une extension aux votes selon une méthode d'agrégation et un type de score.
@@ -62,7 +70,7 @@ def compute_distance(votes, vecE, aggregation, metric):
     elif aggregation == 'min':
         return min(scores)
     elif aggregation == 'leximin':
-        return sorted(scores)
+        return leximin_sort(scores)
     else:
         raise ValueError("Méthode d'agrégation inconnue. Choisir 'sum', 'min' ou 'leximin'.")
 
@@ -81,8 +89,9 @@ def compute_CSS(votes, extensions, all_arguments, aggregation, metric):
     best_distance = None
     
     for extension in extensions:
-        vecE = {arg: 1 if arg in extension else -1 for arg in all_arguments}
+        vecE = {arg: 1 if arg in extension else -1 for arg in all_arguments} # Vectorisation en fonction des arguments de l'AF en fonction de l'extension choisie
         distance = compute_distance(votes, vecE, aggregation, metric)
+        print(distance,extension)
         
         if best_distance is None or distance > best_distance:
             best_distance = distance
