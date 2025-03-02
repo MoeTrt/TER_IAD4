@@ -66,6 +66,7 @@ def compute_distance(votes, vecE, aggregation, metric):
     else:
         raise ValueError("Méthode d'agrégation inconnue. Choisir 'sum', 'min' ou 'leximin'.")
 
+
 def compute_CSS(votes, extensions, all_arguments, aggregation, metric):
     """
     Calcule le CSS en trouvant l'extension qui maximise la distance.

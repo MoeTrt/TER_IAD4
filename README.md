@@ -16,3 +16,7 @@ Grandes lignes du travail à effectuer :
 — Analyser, interpréter et comparer les résultats
 # TER_IAD4
 Projet M1 IAD
+
+Compilation:
+
+python main.py -f path/to/test_af.txt
