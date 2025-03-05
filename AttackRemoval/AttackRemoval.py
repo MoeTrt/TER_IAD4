@@ -47,6 +47,10 @@ class AttackRemoval:
 
     def get_results(self, semantic):
         """Affiche les résultats de COSAR."""
+        if semantic == 'CO':
+            sem = 'complètes'
+        else :
+            sem = 'préférées'
         print("\n **Scores des arguments**")
         for arg, score in self.scores.items():
             print(f"{arg}: {score:.2f}")
@@ -55,7 +59,7 @@ class AttackRemoval:
         for att in self.modified_attacks:
             print(att)
 
-        print("\n **Extensions préférées**")
+        print(f"\n **Extensions {sem}**")
         print(pygarg.dung.solver.extension_enumeration(self.arguments, self.modified_attacks, semantic))
 
     def save_to_apx(self, filename):
