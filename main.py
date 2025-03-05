@@ -5,14 +5,20 @@ import pygarg.dung.solver
 from src.scoring import compute_CSS
 
 # Vérification des arguments de la ligne de commande
-if len(sys.argv) != 3 or sys.argv[1] != "-f":
-    print("Utilisation : python main.py -f <fichier.apx>")
+if len(sys.argv) != 5 or sys.argv[1] != "-f" or sys.argv[3] != "-s":
+    print("Utilisation : python main.py -f <fichier.apx> -s <PR|CO>")
     exit(1)
 
 # Récupération et transformation du chemin en absolu
 af_file = os.path.abspath(sys.argv[2])
 if not os.path.isfile(af_file):
     print(f"Erreur : le fichier '{af_file}' n'existe pas.")
+    exit(1)
+
+# Vérification de la sémantique
+semantics = sys.argv[4].upper()
+if semantics not in ["PR", "CO"]:
+    print("Erreur : La sémantique doit être 'PR' (préférée) ou 'CO' (complète).")
     exit(1)
 
 # Charger le fichier .apx avec pygarg
@@ -22,7 +28,7 @@ print("Arguments:", arguments)
 print("Attaques:", attacks)
 
 # Calculer les extensions avec pygarg
-extensions = pygarg.dung.solver.extension_enumeration(arguments, attacks, 'PR')  # Sémantique préférée
+extensions = pygarg.dung.solver.extension_enumeration(arguments, attacks, semantics)  # Sémantique préférée
 
 print("Extensions trouvées:", extensions)
 
