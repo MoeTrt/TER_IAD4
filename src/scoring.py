@@ -13,7 +13,7 @@ def compute_satisfaction(vote, vecE):
 
 def compute_dissatisfaction(vote, vecE):
     """
-    Calcule la dissatisfaction D_v(E) d'un votant par rapport à une extension.
+    Calcule la dissatisfactio   n D_v(E) d'un votant par rapport à une extension.
     :param vote: Dictionnaire des votes {argument: -1, 0 ou 1}.
     :param vecE: Vecteur V_ec(E) de l'extension {argument: 1 ou -1}.
     :return: Score de dissatisfaction (négatif).
@@ -40,7 +40,10 @@ def leximin_sort(scores):
     :param scores: Liste de listes représentant les scores des extensions.
     :return: Liste triée selon Leximin.
     """
-    return sorted(scores, key=lambda x: tuple(x))  # Tri lexicographique
+    print("score entrée : " , scores)
+    test = sorted(scores, key=lambda x: tuple(x if isinstance(x, (list, tuple)) else [x]))
+    print("score sortie leximin : " , test)
+    return test # Conversion temporaire
 
 def compute_distance(votes, vecE, aggregation, metric):
     """
