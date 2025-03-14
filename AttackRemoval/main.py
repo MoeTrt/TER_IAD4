@@ -28,22 +28,22 @@ def main():
     # print("Arguments:", arguments)
     # print("Attaques:", attacks)
 
-    # votes1 = {
-    # "v1": {"a": 1, "b": 0, "c": 0, "d": -1, "e": 0},
-    # "v2": {"a": 0, "b": 0, "c": 0, "d": 1, "e": 1},
-    # "v3": {"a": 1, "b": -1, "c": -1, "d": -1, "e": -1},
-    # "v4": {"a": -1, "b": 1, "c": 1, "d": -1, "e": -1}
-    # }
+    votes1 = {
+    "v1": {"a": 1, "b": 0, "c": 0, "d": -1, "e": 0},
+    "v2": {"a": 0, "b": 0, "c": 0, "d": 1, "e": 1},
+    "v3": {"a": 1, "b": -1, "c": -1, "d": -1, "e": -1},
+    "v4": {"a": -1, "b": 1, "c": 1, "d": -1, "e": -1}
+    }
 
     votes2 = {
     "v1": {"a": 1, "b": 0, "c": -1, "d": 1, "e": -1},
     "v2": {"a": 1, "b": -1, "c": 0, "d": 1, "e": 0},
     "v3": {"a": -1, "b": 1, "c": 0, "d": 0, "e": 1},
-    "v4": {"a": 0, "b": 1, "c": -1, "d": -1, "e": 1}
+    "v4": {"a": 0, "b": 1, "c": -1, "d": 0, "e": 1}
     }
     
-
-    attRe = AttackRemoval.AttackRemoval(arguments,attacks,votes2)
+    attRe = AttackRemoval.AttackRemoval(arguments,attacks,votes1)
     attRe.get_results(semantics)
+    # attRe.save_to_apx('af1_AR')
     
 main()
