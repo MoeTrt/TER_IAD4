@@ -40,10 +40,10 @@ def leximin_sort(scores):
     :param scores: Liste de listes représentant les scores des extensions.
     :return: Liste triée selon Leximin.
     """
-    print("score entrée : " , scores)
+    #print("score entrée : " , scores)
     test = sorted(scores, key=lambda x: tuple(x if isinstance(x, (list, tuple)) else [x]))
-    print("score sortie leximin : " , test)
-    return test # Conversion temporaire
+    #print("score sortie leximin : " , test)
+    return test
 
 def compute_distance(votes, vecE, aggregation, metric):
     """
