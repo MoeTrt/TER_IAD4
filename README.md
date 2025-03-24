@@ -20,4 +20,4 @@ Projet M1 IAD
 
 Compilation:
 
-python main.py -f path/to/test_af.txt -s <PR|CO>
+python main.py -f path/to/test_af.txt -s <PR|CO> -a <sum|min|leximin> -m <S|D|U>

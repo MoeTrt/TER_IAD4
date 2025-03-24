@@ -6,8 +6,8 @@ from src.scoring import compute_CSS
 from src.parse_apx import parse_func_apx
 
 # Vérification des arguments de la ligne de commande
-if len(sys.argv) != 5 or sys.argv[1] != "-f" or sys.argv[3] != "-s":
-    print("Utilisation : python main.py -f <fichier.apx> -s <PR|CO>")
+if len(sys.argv) != 9 or sys.argv[1] != "-f" or sys.argv[3] != "-s" or sys.argv[5] != "-a" or sys.argv[7] != "-m":
+    print("Utilisation : python main.py -f <fichier.apx> -s <PR|CO> -a <sum|min|leximin> -m <S|D|U>")
     exit(1)
 
 # Récupération et transformation du chemin en absolu
@@ -22,8 +22,15 @@ if semantics not in ["PR", "CO"]:
     print("Erreur : La sémantique doit être 'PR' (préférée) ou 'CO' (complète).")
     exit(1)
 
-# Charger le fichier .apx avec pygarg
-#arguments, attacks = pygarg.dung.apx_parser.parse(af_file)
+aggregation = sys.argv[6].lower()
+if aggregation not in ["sum", "min", "leximin"]:
+    print("Erreur : l'agrégation doit être 'sum', 'min' ou 'leximin'.")
+    exit(1)
+
+measure = sys.argv[8].upper()
+if measure not in ["S", "D", "U"]:
+    print("Erreur : la mesure doit être 'S', 'D' ou 'U'.")
+    exit(1)
 
 arguments, attacks, votes_example = parse_func_apx(af_file)
 print("Votes :" ,votes_example)
@@ -36,18 +43,8 @@ extensions = pygarg.dung.solver.extension_enumeration(arguments, attacks, semant
 
 print("Extensions trouvées:", extensions)
 
-# Exemple d'appel à compute_CSS avec les extensions trouvées (mettre les bons paramètres)
-# votes_example = {
-#     "v1": {"a":  1, "b": 0, "c":  -1, "d": 1, "e":  -1},
-#     "v2": {"a":  1, "b":  -1, "c":  0, "d": 1, "e":  0},
-#     "v3": {"a":  -1, "b": 1, "c": 0, "d": 0, "e":  1},
-#     "v4": {"a": 0, "b":  1, "c":  -1, "d":  0, "e":  1},
-# }
-agregation = "leximin"  # sum : Somme , min : Minimum, leximin : Leximin
-metric = "U"  # S : Satisfaction , D : Disatisfaction, U : Utility
+best_extension, best_distance = compute_CSS(votes_example, extensions, arguments, aggregation, measure)
 
-best_extension, best_distance = compute_CSS(votes_example, extensions, arguments, agregation, metric)
-
-print("Résultat pour l'aggrégation ",agregation," et la mesure ",metric)
+print("Résultat pour l'aggrégation ",aggregation," et la mesure ",measure)
 print("Meilleure extension selon CSS:", best_extension)
 print("Distance associée:", best_distance)
