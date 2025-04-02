@@ -1,0 +1,13 @@
+arg(a).
+arg(b).
+arg(c).
+arg(d).
+att(a,c).
+att(a,b).
+att(c,d).
+att(b,c).
+att(c,b).
+vote(1,-1,-1,-1).
+vote(0,-1,0,-1).
+vote(1,0,1,0).
+vote(0,1,1,1).
