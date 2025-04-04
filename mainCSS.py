@@ -4,6 +4,7 @@ import pygarg.dung.apx_parser
 import pygarg.dung.solver
 from src.scoring import compute_CSS
 from src.parse_apx import parse_func_apx
+from src.generation import vote_generation
 
 # Vérification des arguments de la ligne de commande
 if len(sys.argv) != 9 or sys.argv[1] != "-f" or sys.argv[3] != "-s" or sys.argv[5] != "-a" or sys.argv[7] != "-m":
@@ -33,7 +34,7 @@ if measure not in ["S", "D", "U"]:
     exit(1)
 
 arguments, attacks, votes_example = parse_func_apx(af_file)
-print("Votes :" ,votes_example)
+print("Votes lu par le fichier apx :" ,votes_example)
 
 print("Arguments:", arguments)
 print("Attaques:", attacks)
@@ -45,6 +46,11 @@ print("Extensions trouvées:", extensions)
 
 best_extension, best_distance = compute_CSS(votes_example, extensions, arguments, aggregation, measure)
 
+votes, verite = vote_generation(extensions, arguments)
+
+
+print("Votes générés :", votes)
+print("Vérité choisie (vecteur) :", verite)
 print("Résultat pour l'aggrégation ",aggregation," et la mesure ",measure)
 print("Meilleure extension selon CSS:", best_extension)
 print("Distance associée:", best_distance)
