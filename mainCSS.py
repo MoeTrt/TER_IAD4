@@ -34,23 +34,22 @@ if measure not in ["S", "D", "U"]:
     exit(1)
 
 arguments, attacks, votes_example = parse_func_apx(af_file)
-print("Votes lu par le fichier apx :" ,votes_example)
+# print("Votes lu par le fichier apx :" ,votes_example)
 
-print("Arguments:", arguments)
-print("Attaques:", attacks)
+# print("Arguments:", arguments)
+# print("Attaques:", attacks)
 
 # Calculer les extensions avec pygarg
 extensions = pygarg.dung.solver.extension_enumeration(arguments, attacks, semantics)  # Sémantique préférée
 
-print("Extensions trouvées:", extensions)
-
-best_extension, best_distance = compute_CSS(votes_example, extensions, arguments, aggregation, measure)
+# print("Extensions trouvées:", extensions)
 
 votes, verite = vote_generation(extensions, arguments)
 
+best_extension, best_distance = compute_CSS(votes, extensions, arguments, aggregation, measure)
 
-print("Votes générés :", votes)
-print("Vérité choisie (vecteur) :", verite)
+# print("Votes générés :", votes)
+# print("Vérité choisie (vecteur) :", verite)
 print("Résultat pour l'aggrégation ",aggregation," et la mesure ",measure)
 print("Meilleure extension selon CSS:", best_extension)
 print("Distance associée:", best_distance)
