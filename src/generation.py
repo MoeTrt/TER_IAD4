@@ -89,10 +89,35 @@ def vote_generation(extensions, all_args):
 
     else:
         raise ValueError("Mode inconnu. Choisissez 'uniforme' ou 'non_uniforme'.")
+    
+    fiabilite_reelle= calcul_fiabilite(votes,verite)
 
     print(f"\nVérité choisie : {verite}")
-    print(f"\nVotes générés (mode = {mode}, fiabilité = {fiabilite}) :")
+    print(f"\nVotes générés (mode = {mode}, fiabilité demandée = {fiabilite}) :")
+    print(f"\nFiabilité réelle = {fiabilite_reelle} ")
+
     for name, vote in votes.items():
         print(f"  {name} : {vote}")
 
     return votes, verite
+
+def calcul_fiabilite(votes, verite):
+    """
+    Calcule la fiabilité globale des votes :
+    proportion de votes (argument par votant) qui sont conformes à la vérité.
+    """
+    total_votes = 0
+    votes_corrects = 0
+
+    for votant, vote in votes.items():
+        for arg, valeur in vote.items():
+            if arg in verite:
+                total_votes += 1
+                if valeur == verite[arg]:
+                    votes_corrects += 1
+
+    if total_votes == 0:
+        return 0.0
+
+    fiabilite_observee = votes_corrects / total_votes
+    return fiabilite_observee
