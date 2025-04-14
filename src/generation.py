@@ -107,10 +107,10 @@ def vote_generation(extensions, all_args):
     fiabilite_reelle = calcul_fiabilite(votes, verite)
 
     print(f"\nVérité choisie : {verite}")
-    print(f"Votes générés (mode = {mode}, fiabilité demandée = {fiabilite:.2f})")
-    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}\n")
+    print(f"Votes générés (mode = {mode}, fiabilité demandée = {fiabilite:.2f}):")
 
     for name, vote in votes.items():
         print(f"  {name} : {vote}")
 
+    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}:")
     return votes, verite
