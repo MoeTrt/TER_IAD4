@@ -7,7 +7,8 @@ def vectorization(extension, all_args):
     """
     return {arg: 1 if arg in extension else -1 for arg in all_args}
 
-def uniformes_genertation_votes(vec_verite, n_votants, fiabilite):
+
+def uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     """
     Génère des votes binaires avec fiabilité uniforme pour chaque votant.
     Chaque votant respecte la même fiabilité.
@@ -40,16 +41,12 @@ def not_uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     Le nombre total de votes corrects est réparti aléatoirement parmi tous les votes.
     """
     arguments = list(vec_verite.keys())
-    n_arguments = len(arguments)
-
-    total_votes = n_votants * n_arguments
+    total_votes = n_votants * len(arguments)
     total_correct_votes = round(fiabilite * total_votes)
 
-    # Initialisation
     voters = [f"v{i+1}" for i in range(n_votants)]
     votes = {v: {} for v in voters}
 
-    # Créer toutes les paires (votant, argument)
     positions = [(v, a) for v in voters for a in arguments]
     correct_positions = random.sample(positions, total_correct_votes)
 
@@ -61,12 +58,30 @@ def not_uniformes_generation_votes(vec_verite, n_votants, fiabilite):
 
     return votes
 
+def calcul_fiabilite(votes, verite):
+    """
+    Calcule la fiabilité globale des votes :
+    proportion de votes (argument par votant) qui sont conformes à la vérité.
+    """
+    total_votes = 0
+    votes_corrects = 0
+
+    for vote in votes.values():
+        for arg, val in vote.items():
+            if arg in verite:
+                total_votes += 1
+                if val == verite[arg]:
+                    votes_corrects += 1
+
+    if total_votes == 0:
+        return 0.0
+    return votes_corrects / total_votes
 
 def vote_generation(extensions, all_args):
     """
     Gère l'interaction avec l'utilisateur et génère les votes selon le mode choisi :
     - 'uniforme' : chaque votant respecte la même fiabilité
-    - 'non_uniforme' : fiabilité répartie globalement (ex. 4 votes corrects sur 16)
+    - 'non_uniforme' : fiabilité répartie globalement
     """
     print("\nExtensions disponibles :")
     for i, ext in enumerate(extensions):
@@ -76,48 +91,26 @@ def vote_generation(extensions, all_args):
     verite = vectorization(extensions[choix], all_args)
 
     mode = input("Choisissez le mode de génération ('uniforme' ou 'non_uniforme') : ").strip().lower()
+    fiabilite = float(input("Entrez la fiabilité souhaitée (entre 0 et 1) : "))
+    n_votants = int(input("Entrez le nombre de votants : "))
+
+    if not 0 <= fiabilite <= 1:
+        raise ValueError("La fiabilité doit être entre 0 et 1.")
 
     if mode == 'uniforme':
-        fiabilite = float(input("Entrez la fiabilité souhaitée (entre 0 et 1) : "))
-        n_votants = int(input("Entrez le nombre de votants : "))
-        votes = uniformes_genertation_votes(verite, n_votants, fiabilite)
-
+        votes = uniformes_generation_votes(verite, n_votants, fiabilite)
     elif mode == 'non_uniforme':
-        fiabilite = float(input("Entrez la fiabilité globale souhaitée (entre 0 et 1) : "))
-        n_votants = int(input("Entrez le nombre de votants : "))
         votes = not_uniformes_generation_votes(verite, n_votants, fiabilite)
-
     else:
         raise ValueError("Mode inconnu. Choisissez 'uniforme' ou 'non_uniforme'.")
-    
-    fiabilite_reelle= calcul_fiabilite(votes,verite)
+
+    fiabilite_reelle = calcul_fiabilite(votes, verite)
 
     print(f"\nVérité choisie : {verite}")
-    print(f"\nVotes générés (mode = {mode}, fiabilité demandée = {fiabilite}) :")
-    print(f"\nFiabilité réelle = {fiabilite_reelle} ")
+    print(f"Votes générés (mode = {mode}, fiabilité demandée = {fiabilite:.2f})")
+    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}\n")
 
     for name, vote in votes.items():
         print(f"  {name} : {vote}")
 
     return votes, verite
-
-def calcul_fiabilite(votes, verite):
-    """
-    Calcule la fiabilité globale des votes :
-    proportion de votes (argument par votant) qui sont conformes à la vérité.
-    """
-    total_votes = 0
-    votes_corrects = 0
-
-    for votant, vote in votes.items():
-        for arg, valeur in vote.items():
-            if arg in verite:
-                total_votes += 1
-                if valeur == verite[arg]:
-                    votes_corrects += 1
-
-    if total_votes == 0:
-        return 0.0
-
-    fiabilite_observee = votes_corrects / total_votes
-    return fiabilite_observee
