@@ -112,5 +112,5 @@ def vote_generation(extensions, all_args):
     for name, vote in votes.items():
         print(f"  {name} : {vote}")
 
-    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}:")
+    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}")
     return votes, verite
