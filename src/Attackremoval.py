@@ -59,7 +59,7 @@ class AttackRemoval:
         for att in self.modified_attacks:
             print(att)
 
-        print(f"\n **Extensions {sem}**")
+        print(f"\n **Meilleure extensions {sem} selon AR**")
         print(pygarg.dung.solver.extension_enumeration(self.arguments, self.modified_attacks, semantic))
 
     def save_to_apx(self, filename):
