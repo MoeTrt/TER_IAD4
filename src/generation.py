@@ -77,26 +77,19 @@ def calcul_fiabilite(votes, verite):
         return 0.0
     return votes_corrects / total_votes
 
-def vote_generation(extensions, all_args):
+import random
+
+def vote_generation(extensions, all_args, mode, fiabilite, n_votants):
     """
-    Gère l'interaction avec l'utilisateur et génère les votes selon le mode choisi :
-    - 'uniforme' : chaque votant respecte la même fiabilité
-    - 'non_uniforme' : fiabilité répartie globalement
+    Génère les votes automatiquement sans interaction utilisateur.
+    - Choisit aléatoirement une vérité parmi les extensions.
+    - Génère les votes selon le mode et la fiabilité donnés.
     """
-    print("\nExtensions disponibles :")
-    for i, ext in enumerate(extensions):
-        print(f"  [{i}] {ext}")
+    # Choix aléatoire de la vérité
+    verite_ext = random.choice(extensions)
+    verite = vectorization(verite_ext, all_args)
 
-    choix = int(input("\nChoisissez l'indice de l'extension qui servira de vérité : "))
-    verite = vectorization(extensions[choix], all_args)
-
-    mode = input("Choisissez le mode de génération ('uniforme' ou 'non_uniforme') : ").strip().lower()
-    fiabilite = float(input("Entrez la fiabilité souhaitée (entre 0 et 1) : "))
-    n_votants = int(input("Entrez le nombre de votants : "))
-
-    if not 0 <= fiabilite <= 1:
-        raise ValueError("La fiabilité doit être entre 0 et 1.")
-
+    # Génération des votes
     if mode == 'uniforme':
         votes = uniformes_generation_votes(verite, n_votants, fiabilite)
     elif mode == 'non_uniforme':
@@ -104,13 +97,7 @@ def vote_generation(extensions, all_args):
     else:
         raise ValueError("Mode inconnu. Choisissez 'uniforme' ou 'non_uniforme'.")
 
+    # Calcul de la fiabilité réelle obtenue
     fiabilite_reelle = calcul_fiabilite(votes, verite)
 
-    print(f"\nVérité choisie : {verite}")
-    print(f"Votes générés (mode = {mode}, fiabilité demandée = {fiabilite:.2f}):")
-
-    for name, vote in votes.items():
-        print(f"  {name} : {vote}")
-
-    print(f"Fiabilité réelle observée : {fiabilite_reelle:.2f}")
-    return votes, verite
+    return votes, verite_ext, fiabilite_reelle
