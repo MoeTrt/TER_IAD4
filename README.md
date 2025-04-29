@@ -20,6 +20,6 @@ Projet M1 IAD
 
 Compilation:
 
-- **CSS** : python mainCSS.py -f path/to/test_af.txt -s <PR|CO> -a <sum|min|leximin> -m <S|D|U>
+- **CSS** : python mainCSS.py -f path/to/test_af.txt -a <sum|min|leximin> -m <S|D|U>
 
-- **AR** : python mainAR.py -f path/to/test_af.txt -s <PR|CO>
+- **AR** : python mainAR.py -f path/to/test_af.txt
