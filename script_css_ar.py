@@ -3,7 +3,7 @@ import csv
 import subprocess
 
 obaf_root_dir = "./benchmark/OBAF/WS"
-output_csv = "obaf_results_ws.csv"
+output_csv = "obaf_results_WS.csv"
 
 measures = ["S", "D", "U"]
 aggregations = ["sum", "min", "leximin"]
@@ -13,7 +13,7 @@ css_headers = [f"CSS_{m}_{a}" for m in measures for a in aggregations]
 global_headers = [
     "fichier_apx", "num_arg", "num_ext", "semantique", "methode",
     "fiabilite", "fiabilite_observee", "repetition", "verite",
-    "EXT_AR", "NB_EXT_AR"
+    "EXT_AR"
 ] + css_headers
 
 # Liste globale des lignes finales
