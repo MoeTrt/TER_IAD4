@@ -75,7 +75,7 @@ def calcul_fiabilite(votes, verite):
 
     if total_votes == 0:
         return 0.0
-    return votes_corrects / total_votes
+    return round(votes_corrects / total_votes, 4)
 
 import random
 
@@ -99,5 +99,6 @@ def vote_generation(extensions, all_args, mode, fiabilite, n_votants):
 
     # Calcul de la fiabilité réelle obtenue
     fiabilite_reelle = calcul_fiabilite(votes, verite)
+    # print(fiabilite_reelle)
 
     return votes, verite_ext, fiabilite_reelle

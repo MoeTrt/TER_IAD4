@@ -10,8 +10,8 @@ from src.generation import (
     calcul_fiabilite, vote_generation
 )
 
-input_dir = "./benchmark/AF/BA"
-output_dir = "./benchmark/OBAF/BA"
+input_dir = ".benchmark/AF/WS"
+output_dir = "./benchmark/OBAF/WS"
 
 semantics_list = ["PR", "CO"]
 fiabilites = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]

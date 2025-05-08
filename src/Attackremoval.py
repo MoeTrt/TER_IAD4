@@ -1,8 +1,7 @@
 import re
 import networkx as nx
 from collections import defaultdict
-
-import pygarg.dung.solver
+import pygarg.dung.solver as solver
 
 class AttackRemoval:
     def __init__(self, arguments, attacks, votes, epsilon=0.1):
@@ -46,21 +45,18 @@ class AttackRemoval:
         return new_attacks
 
     def get_results(self, semantic):
-        """Affiche les résultats de COSAR."""
+        """Affiche les résultats de COSAR au format parsable."""
         if semantic == 'CO':
             sem = 'complètes'
-        else :
+        else:
             sem = 'préférées'
-        print("\n **Scores des arguments**")
-        for arg, score in self.scores.items():
-            print(f"{arg}: {score:.2f}")
 
-        print("\n **Attaques après suppression**")
-        for att in self.modified_attacks:
-            print(att)
+        extensions = solver.extension_enumeration(self.arguments, self.modified_attacks, semantic)
 
-        print(f"\n **Meilleure extensions {sem} selon AR**")
-        print(pygarg.dung.solver.extension_enumeration(self.arguments, self.modified_attacks, semantic))
+        # Affichage structuré pour le script principal
+        print("EXT_AR:", extensions)
+        print("NB_EXT_AR:", len(extensions))
+
 
     def save_to_apx(self, filename):
         """Sauvegarde le nouveau système d'argumentation dans un fichier .apx."""
