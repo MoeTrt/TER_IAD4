@@ -3,7 +3,7 @@ import csv
 import subprocess
 
 obaf_root_dir = "./benchmark/OBAF/WS"
-output_csv = "obaf_results_WS.csv"
+output_csv = "test_results_WS.csv"
 
 measures = ["S", "D", "U"]
 aggregations = ["sum", "min", "leximin"]
@@ -11,7 +11,7 @@ css_headers = [f"CSS_{m}_{a}" for m in measures for a in aggregations]
 
 # Header complet du fichier global
 global_headers = [
-    "fichier_apx", "num_arg", "num_ext", "semantique", "methode",
+    "fichier_af","fichier_apx", "num_arg", "num_ext", "semantique", "methode",
     "fiabilite", "fiabilite_observee", "repetition", "verite",
     "EXT_AR"
 ] + css_headers
@@ -91,11 +91,11 @@ for root, dirs, files in os.walk(obaf_root_dir):
 
             # On ajoute à la liste globale (pour obaf_results.csv)
             all_rows.append([
-                row["fichier_apx"], row["num_arg"], row["num_ext"], semantics, row["methode"],
+                row["fichier_af"], row["fichier_apx"], row["num_arg"], row["num_ext"], semantics, row["methode"],
                 row["fiabilite"], row["fiabilite_observee"], row["repetition"], row["verite"],
                 ext_ar
             ] + css_extensions)
-
+    break
     # ---------- Réécriture de info_generation.csv enrichi
     print(f" Mise à jour : {info_path}")
     updated_headers = original_headers.copy()
