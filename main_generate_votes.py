@@ -3,15 +3,10 @@ import csv
 import random
 import pygarg.dung.apx_parser
 from pygarg.dung.solver import extension_enumeration
-from src.generation import (
-    vectorization,
-    uniformes_generation_votes,
-    not_uniformes_generation_votes,
-    calcul_fiabilite, vote_generation
-)
+from src.generation import vote_generation
 
-input_dir = ".benchmark/AF/WS"
-output_dir = "./benchmark/OBAF/WS"
+input_dir = "./benchmark/AF/BA"
+output_dir = "./benchmark/OBAF/BA"
 
 semantics_list = ["PR", "CO"]
 fiabilites = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
@@ -39,7 +34,7 @@ for filename in os.listdir(input_dir):
     with open(info_csv_path, "w", newline="") as info_file:
         info_writer = csv.writer(info_file)
         info_writer.writerow([
-            "fichier_apx", "num_arg", "num_ext", "semantique", "methode", 
+            "fichier_af", "fichier_apx", "num_arg", "num_ext", "semantique", "methode", 
             "fiabilite", "fiabilite_observee", "repetition", "verite"
         ])
 
@@ -77,7 +72,7 @@ for filename in os.listdir(input_dir):
                                 apx_file.write(line)
 
                         info_writer.writerow([
-                            apx_name, len(args), len(extensions), semantics, mode, fiab, fiab_obs, rep, verite_ext
+                            filename, apx_name, len(args), len(extensions), semantics, mode, fiab, fiab_obs, rep, verite_ext
                         ])
 
     print(f" Générations terminées pour {graph_name}")

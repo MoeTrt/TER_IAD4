@@ -1,4 +1,5 @@
 import random
+import math
 
 def vectorization(extension, all_args):
     """
@@ -15,7 +16,7 @@ def uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     """
     arguments = list(vec_verite.keys())
     n_arguments = len(arguments)
-    n_correct = round(fiabilite * n_arguments)
+    n_correct = math.ceil(fiabilite * n_arguments)
 
     votes = {}
     for i in range(n_votants):
@@ -42,20 +43,24 @@ def not_uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     """
     arguments = list(vec_verite.keys())
     total_votes = n_votants * len(arguments)
-    total_correct_votes = round(fiabilite * total_votes)
 
     voters = [f"v{i+1}" for i in range(n_votants)]
     votes = {v: {} for v in voters}
-
     positions = [(v, a) for v in voters for a in arguments]
-    correct_positions = random.sample(positions, total_correct_votes)
 
-    for v, a in positions:
-        if (v, a) in correct_positions:
+    total_correct_votes = math.ceil(fiabilite * total_votes)
+
+    if fiabilite == 1.0 :
+        for v, a in positions:
             votes[v][a] = vec_verite[a]
-        else:
-            votes[v][a] = -vec_verite[a]
-
+    
+    else :
+        correct_positions = random.sample(positions, total_correct_votes)
+        for v, a in positions:
+            if (v, a) in correct_positions:
+                votes[v][a] = vec_verite[a]
+            else:
+                votes[v][a] = -vec_verite[a]
     return votes
 
 def calcul_fiabilite(votes, verite):
