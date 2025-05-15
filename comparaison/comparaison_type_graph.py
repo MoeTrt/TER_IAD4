@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import ast
 import os
 
-df = pd.read_csv("test_results_WS.csv") 
+df = pd.read_csv("obaf_results.csv") 
 
 output_dir = "figures"
 os.makedirs(output_dir, exist_ok=True)
