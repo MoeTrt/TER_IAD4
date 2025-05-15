@@ -2,8 +2,8 @@ import os
 import csv
 import subprocess
 
-obaf_root_dir = "./benchmark/OBAF/WS"
-output_csv = "obaf_results_WS.csv"
+obaf_root_dir = "./benchmark/OBAF/BA"
+output_csv = "obaf_results_BA.csv"
 
 measures = ["S", "D", "U"]
 aggregations = ["sum", "min", "leximin"]
@@ -95,7 +95,7 @@ for root, dirs, files in os.walk(obaf_root_dir):
                 row["fiabilite"], row["fiabilite_observee"], row["repetition"], row["verite"],
                 ext_ar
             ] + css_extensions)
-    break
+            
     # ---------- Réécriture de info_generation.csv enrichi
     print(f" Mise à jour : {info_path}")
     updated_headers = original_headers.copy()
