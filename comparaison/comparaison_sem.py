@@ -1,24 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import ast
 import os
+import ast
 
-df = pd.read_csv("obaf_results_BA_TEST.csv")
-
+df = pd.read_csv("obaf_results_BA.csv")
 output_dir = "figures/BA"
 os.makedirs(output_dir, exist_ok=True)
+
+# df = df[df["semantique"] == "CO"]
+df = df[df["semantique"] == "PR"]
 
 def normalize_extension(ext):
     try:
         parsed = ast.literal_eval(ext.strip())
-
-        # Si c'est une seule extension [a, b], on la met dans une liste [[a, b]]
         if isinstance(parsed, list):
             if len(parsed) > 0 and isinstance(parsed[0], list):
-                # Plusieurs extensions
                 return [sorted([str(arg).strip() for arg in sub]) for sub in parsed]
             else:
-                # Une seule extension
                 return [sorted([str(arg).strip() for arg in parsed])]
     except:
         pass
@@ -27,10 +25,21 @@ def normalize_extension(ext):
 def compare_extensions(returned_exts, true_ext):
     normalized_returned = normalize_extension(returned_exts)
     normalized_truth = normalize_extension(true_ext)
-
-    # On compare avec la première vérité seulement (on suppose une seule vérité)
     return normalized_truth[0] in normalized_returned if normalized_truth else False
 
+# Groupes de méthodes pour chaque sous-graphique
+method_groups = {
+    "AR": ["AR"],
+    "CSS_S": ["CSS_S_min", "CSS_S_sum", "CSS_S_leximin"],
+    "CSS_D": ["CSS_D_min", "CSS_D_sum", "CSS_D_leximin"],
+    "CSS_U": ["CSS_U_min", "CSS_U_sum", "CSS_U_leximin"]
+}
+
+# Création de la figure avec 4 sous-graphes
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+axes = axes.flatten()
+
+# Dictionnaire des noms de colonnes
 methods = {
     "AR": "EXT_AR",
     "CSS_S_min": "CSS_S_min",
@@ -44,41 +53,42 @@ methods = {
     "CSS_U_leximin": "CSS_U_leximin",
 }
 
-results = []
+custom_colors = {
+    "AR": "#3142D8",         
+    "CSS_S_min": "#8A1538", 
+    "CSS_S_sum": "#F4E150",  
+    "CSS_S_leximin": "#807B7B",  
+    "CSS_D_min": "#8A1538",  
+    "CSS_D_sum": "#F4E150",  
+    "CSS_D_leximin": "#807B7B",  
+    "CSS_U_min": "#8A1538",  
+    "CSS_U_sum": "#F4E150",  
+    "CSS_U_leximin": "#807B7B",  
+}
 
-for method_label, col in methods.items():
-    if col not in df.columns:
-        continue  
-    df[f"match_{method_label}"] = df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
+for i, (group_label, method_list) in enumerate(method_groups.items()):
+    ax = axes[i]
     
-    grouped = df.groupby("semantique")[f"match_{method_label}"].mean().reset_index()
-    for _, row in grouped.iterrows():
-        results.append({
-            "Méthode": method_label,
-            "Sémantique": row["semantique"],
-            "Taux de réussite (%)": row[f"match_{method_label}"] * 100
-        })
+    for label in method_list:
+        col = methods[label]
+        match_col = f"match_{label}"
+        df[match_col] = df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
+        grouped = df.groupby("fiabilite")[match_col].mean().reset_index()
+        grouped["Taux de réussite (%)"] = grouped[match_col] * 100
 
-bar_df = pd.DataFrame(results)
+        ax.plot(grouped["fiabilite"], grouped["Taux de réussite (%)"], 
+        marker='o', linewidth=1.5, label=label, color=custom_colors[label])
 
-plt.figure(figsize=(12, 6))
-colors = {"PR": "#4596d0", "CO": "#9e2e50"}
+    ax.set_title(f"Comparaison - {group_label}")
+    ax.set_xlabel("Fiabilité")
+    ax.set_ylabel("Taux de réussite (%)")
+    ax.grid(True)
+    ax.legend()
 
-for i, semantic in enumerate(bar_df["Sémantique"].unique()):
-    subset = bar_df[bar_df["Sémantique"] == semantic]
-    plt.bar([x + i * 0.35 for x in range(len(subset))],
-            subset["Taux de réussite (%)"],
-            width=0.35,
-            label=semantic,
-            color=colors[semantic])
+plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Sémantique PR (BA)", fontsize=14)
+plt.tight_layout(rect=[0, 0, 1, 0.96])
 
-plt.xticks([x + 0.175 for x in range(len(subset))], subset["Méthode"], rotation=45)
-plt.ylabel("Taux de réussite (%)")
-plt.title("Comparaison des taux de réussite par méthode selon la sémantique (PR vs CO)")
-plt.legend()
-plt.tight_layout()
-
-output_path = os.path.join(output_dir, "taux_reussite_par_semantique.png")
+output_path = os.path.join(output_dir, "taux_reussite_PR_ba.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 
