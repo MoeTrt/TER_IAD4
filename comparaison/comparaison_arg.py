@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results.csv")
+df = pd.read_csv("info_generation_copy.csv")
 
-output_dir = "figures"
+output_dir = "figures/WS"
 os.makedirs(output_dir, exist_ok=True)
 
 def normalize_extension(ext):

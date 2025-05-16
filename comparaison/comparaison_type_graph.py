@@ -63,7 +63,7 @@ for method_label, col in methods.items():
 bar_df = pd.DataFrame(results)
 
 plt.figure(figsize=(12, 6))
-colors = {"BA": "#2ca02c", "WS": "#d62728"}
+colors = {"BA": "#47CD3D", "WS": "#e04242"}
 
 for i, t in enumerate(bar_df["Type"].unique()):
     subset = bar_df[bar_df["Type"] == t]

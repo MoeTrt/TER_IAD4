@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import ast
 import os
 
-df = pd.read_csv("obaf_results.csv")
+df = pd.read_csv("obaf_results_BA_TEST.csv")
 
-output_dir = "figures"
+output_dir = "figures/BA"
 os.makedirs(output_dir, exist_ok=True)
 
 def normalize_extension(ext):
@@ -62,7 +62,7 @@ for method_label, col in methods.items():
 bar_df = pd.DataFrame(results)
 
 plt.figure(figsize=(12, 6))
-colors = {"PR": "#1f77b4", "CO": "#ff7f0e"}
+colors = {"PR": "#4596d0", "CO": "#9e2e50"}
 
 for i, semantic in enumerate(bar_df["Sémantique"].unique()):
     subset = bar_df[bar_df["Sémantique"] == semantic]

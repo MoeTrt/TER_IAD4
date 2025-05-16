@@ -16,9 +16,19 @@ def uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     """
     arguments = list(vec_verite.keys())
     n_arguments = len(arguments)
+    
+    votes = {}
+
+    if fiabilite == 1.0:
+        # Tous les votants votent parfaitement selon la vérité
+        for i in range(n_votants):
+            vote = {arg: vec_verite[arg] for arg in sorted(arguments)}
+            votes[f"v{i+1}"] = vote
+        return votes
+
+    # Cas général : fiabilité partielle
     n_correct = math.ceil(fiabilite * n_arguments)
 
-    votes = {}
     for i in range(n_votants):
         vote = {}
         shuffled_args = arguments.copy()
@@ -35,6 +45,7 @@ def uniformes_generation_votes(vec_verite, n_votants, fiabilite):
         votes[f"v{i+1}"] = sorted_vote
 
     return votes
+
 
 def not_uniformes_generation_votes(vec_verite, n_votants, fiabilite):
     """

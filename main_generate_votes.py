@@ -14,10 +14,10 @@ modes = ["uniforme", "non_uniforme"]
 n_votants = 5
 n_repetitions = 5
 
-for filename in os.listdir(input_dir):
-    if not filename.endswith(".apx"):
-        continue
+all_apx_files = sorted([f for f in os.listdir(input_dir) if f.endswith(".apx")])
+last_three_files = all_apx_files[-2:]  # Prend les 3 derniers
 
+for filename in last_three_files:
     graph_path = os.path.join(input_dir, filename)
     graph_name = os.path.splitext(filename)[0]
 
@@ -60,15 +60,13 @@ for filename in os.listdir(input_dir):
                         apx_path = os.path.join(output_graph_dir, apx_name)
 
                         with open(apx_path, "w") as apx_file:
-                            
                             for arg in args:
                                 apx_file.write(f"arg({arg}).\n")
-                                
                             for att in attacks:
                                 apx_file.write(f"att({att[0]},{att[1]}).\n")
-
                             for vote in votes.values():
-                                line = "vote(" + ",".join(str(vote[arg]) for arg in sorted(args)) + ").\n"
+                                # print(vote[arg])
+                                line = "vote(" + ",".join(str(vote[arg]) for arg in args) + ").\n"
                                 apx_file.write(line)
 
                         info_writer.writerow([

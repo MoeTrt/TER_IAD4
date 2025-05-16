@@ -94,7 +94,7 @@ def compute_CSS(votes, extensions, all_arguments, aggregation, metric):
     for extension in extensions:
         vecE = {arg: 1 if arg in extension else -1 for arg in all_arguments} # Vectorisation en fonction des arguments de l'AF en fonction de l'extension choisie
         distance = compute_distance(votes, vecE, aggregation, metric)
-        print(distance,extension)
+        # print(distance,extension)
         
         if best_distance is None or distance > best_distance:
             best_distance = distance
