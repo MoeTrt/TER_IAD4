@@ -3,13 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results_WS.csv")
-output_dir = "figures/WS"
+df = pd.read_csv("obaf_results.csv")
+output_dir = "figures"
 os.makedirs(output_dir, exist_ok=True)
-
-df = df[df["num_arg"] == 10]
-# df = df[df["num_arg"] == 20]
-# df = df[df["num_arg"] == 30]
 
 def normalize_extension(ext):
     try:
@@ -28,69 +24,57 @@ def compare_extensions(returned_exts, true_ext):
     normalized_truth = normalize_extension(true_ext)
     return normalized_truth[0] in normalized_returned if normalized_truth else False
 
-# Groupes de méthodes pour chaque sous-graphique
+# Méthodes à inclure : uniquement AR et CSS_U
 method_groups = {
     "AR": ["AR"],
-    "CSS_S": ["CSS_S_min", "CSS_S_sum", "CSS_S_leximin"],
-    "CSS_D": ["CSS_D_min", "CSS_D_sum", "CSS_D_leximin"],
     "CSS_U": ["CSS_U_min", "CSS_U_sum", "CSS_U_leximin"]
 }
 
-# Création de la figure avec 4 sous-graphes
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-axes = axes.flatten()
-
-# Dictionnaire des noms de colonnes
 methods = {
     "AR": "EXT_AR",
-    "CSS_S_min": "CSS_S_min",
-    "CSS_S_sum": "CSS_S_sum",
-    "CSS_S_leximin": "CSS_S_leximin",
-    "CSS_D_min": "CSS_D_min",
-    "CSS_D_sum": "CSS_D_sum",
-    "CSS_D_leximin": "CSS_D_leximin",
     "CSS_U_min": "CSS_U_min",
     "CSS_U_sum": "CSS_U_sum",
     "CSS_U_leximin": "CSS_U_leximin",
 }
 
 custom_colors = {
-    "AR": "#3142D8",         
-    "CSS_S_min": "#8A1538", 
-    "CSS_S_sum": "#F4E150",  
-    "CSS_S_leximin": "#807B7B",  
-    "CSS_D_min": "#8A1538",  
-    "CSS_D_sum": "#F4E150",  
-    "CSS_D_leximin": "#807B7B",  
-    "CSS_U_min": "#8A1538",  
-    "CSS_U_sum": "#F4E150",  
-    "CSS_U_leximin": "#807B7B",  
+    "AR": "#3142D8",
+    "CSS_U_min": "#8A1538",
+    "CSS_U_sum": "#F4E150",
+    "CSS_U_leximin": "#807B7B"
 }
 
-for i, (group_label, method_list) in enumerate(method_groups.items()):
-    ax = axes[i]
-    
-    for label in method_list:
-        col = methods[label]
-        match_col = f"match_{label}"
-        df[match_col] = df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
-        grouped = df.groupby("fiabilite")[match_col].mean().reset_index()
-        grouped["Taux de réussite (%)"] = grouped[match_col] * 100
+# Création des sous-graphes pour 10, 20 et 30 arguments
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+num_args_list = [10, 20, 30]
 
-        ax.plot(grouped["fiabilite"], grouped["Taux de réussite (%)"], 
-        marker='o', linewidth=1.5, label=label, color=custom_colors[label])
+for idx, num_args in enumerate(num_args_list):
+    ax = axes[idx]
+    sub_df = df[df["num_arg"] == num_args]
 
-    ax.set_title(f"Comparaison - {group_label}")
+    for group_label, method_list in method_groups.items():
+        for label in method_list:
+            col = methods[label]
+            match_col = f"match_{label}"
+            sub_df[match_col] = sub_df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
+            grouped = sub_df.groupby("fiabilite")[match_col].mean().reset_index()
+            grouped["Taux de réussite (%)"] = grouped[match_col] * 100
+
+            ax.plot(grouped["fiabilite"], grouped["Taux de réussite (%)"], 
+                    marker='o', linewidth=1.5, label=label, color=custom_colors[label])
+
+    ax.set_title(f"{num_args} arguments")
     ax.set_xlabel("Fiabilité")
-    ax.set_ylabel("Taux de réussite (%)")
+    if idx == 0:
+        ax.set_ylabel("Taux de réussite (%)")
     ax.grid(True)
     ax.legend()
 
-plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - 10 Arguments (WS)", fontsize=14)
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.suptitle("Comparaison AR et CSS_U selon la fiabilité - 10, 20 et 30 arguments", fontsize=14)
+plt.tight_layout(rect=[0, 0, 1, 0.95])
 
-output_path = os.path.join(output_dir, "taux_reussite_10_args_WS.png")
+output_path = os.path.join(output_dir, "taux_reussite_AR_CSSU_par_nb_arguments.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 
-print(f" Graphique enregistré dans : {output_path}")
+print(f"Graphique enregistré dans : {output_path}")

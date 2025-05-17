@@ -3,12 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results.csv")
-output_dir = "figures"
+df = pd.read_csv("obaf_results_WS.csv")
+output_dir = "figures/WS"
 os.makedirs(output_dir, exist_ok=True)
-
-# df = df[df["methode"] == "uniforme"]
-df = df[df["methode"] == "non_uniforme"]
 
 def normalize_extension(ext):
     try:
@@ -27,7 +24,7 @@ def compare_extensions(returned_exts, true_ext):
     normalized_truth = normalize_extension(true_ext)
     return normalized_truth[0] in normalized_returned if normalized_truth else False
 
-# Groupes de méthodes pour chaque sous-graphique
+# Groupes de méthodes à afficher
 method_groups = {
     "AR": ["AR"],
     "CSS_S": ["CSS_S_min", "CSS_S_sum", "CSS_S_leximin"],
@@ -35,11 +32,6 @@ method_groups = {
     "CSS_U": ["CSS_U_min", "CSS_U_sum", "CSS_U_leximin"]
 }
 
-# Création de la figure avec 4 sous-graphes
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-axes = axes.flatten()
-
-# Dictionnaire des noms de colonnes
 methods = {
     "AR": "EXT_AR",
     "CSS_S_min": "CSS_S_min",
@@ -66,30 +58,38 @@ custom_colors = {
     "CSS_U_leximin": "#807B7B",  
 }
 
-for i, (group_label, method_list) in enumerate(method_groups.items()):
-    ax = axes[i]
-    
-    for label in method_list:
-        col = methods[label]
-        match_col = f"match_{label}"
-        df[match_col] = df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
-        grouped = df.groupby("fiabilite")[match_col].mean().reset_index()
-        grouped["Taux de réussite (%)"] = grouped[match_col] * 100
+# Configuration des deux sous-graphiques : uniforme vs non uniforme
+fig, axes = plt.subplots(1, 2, figsize=(16, 7))
+methode_list = ["uniforme", "non_uniforme"]
+titles = ["Votes Uniformes", "Votes Non-Uniformes"]
 
-        ax.plot(grouped["fiabilite"], grouped["Taux de réussite (%)"], 
-        marker='o', linewidth=1.5, label=label, color=custom_colors[label])
+for idx, methode in enumerate(methode_list):
+    ax = axes[idx]
+    sub_df = df[df["methode"] == methode]
 
-    ax.set_title(f"Comparaison - {group_label}")
+    for group_label, method_list in method_groups.items():
+        for label in method_list:
+            col = methods[label]
+            match_col = f"match_{label}"
+            sub_df[match_col] = sub_df.apply(lambda row: compare_extensions(row[col], row["verite"]), axis=1)
+            grouped = sub_df.groupby("fiabilite")[match_col].mean().reset_index()
+            grouped["Taux de réussite (%)"] = grouped[match_col] * 100
+
+            ax.plot(grouped["fiabilite"], grouped["Taux de réussite (%)"],
+                    marker='o', linewidth=1.5, label=label, color=custom_colors[label])
+
+    ax.set_title(titles[idx])
     ax.set_xlabel("Fiabilité")
-    ax.set_ylabel("Taux de réussite (%)")
+    if idx == 0:
+        ax.set_ylabel("Taux de réussite (%)")
     ax.grid(True)
     ax.legend()
 
-plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Votes Non-Uniforme ", fontsize=14)
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Méthodes de vote (WS)", fontsize=16)
+plt.tight_layout(rect=[0, 0, 1, 0.95])
 
-output_path = os.path.join(output_dir, "taux_reussite_non_uniforme.png")
+output_path = os.path.join(output_dir, "taux_reussite_uniforme_vs_non_uniforme_ws.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 
-print(f" Graphique enregistré dans : {output_path}")
+print(f"Graphique enregistré dans : {output_path}")
