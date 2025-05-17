@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results_BA.csv")
+df = pd.read_csv("obaf_results.csv")
 
-output_dir = "figures/BA"
+output_dir = "figures"
 os.makedirs(output_dir, exist_ok=True)
 
 def normalize_extension(ext):
@@ -83,10 +83,10 @@ for i, (group_label, method_list) in enumerate(method_groups.items()):
     ax.grid(True)
     ax.legend()
 
-plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité (BA)", fontsize=14)
+plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité", fontsize=14)
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 
-output_path = os.path.join(output_dir, "taux_reussite_ba.png")
+output_path = os.path.join(output_dir, "taux_reussite.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 

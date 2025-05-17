@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results_BA.csv")
-output_dir = "figures/BA"
+df = pd.read_csv("obaf_results_WS.csv")
+output_dir = "figures/WS"
 os.makedirs(output_dir, exist_ok=True)
 
-# df = df[df["semantique"] == "CO"]
-df = df[df["semantique"] == "PR"]
+df = df[df["semantique"] == "CO"]
+# df = df[df["semantique"] == "PR"]
 
 def normalize_extension(ext):
     try:
@@ -85,10 +85,10 @@ for i, (group_label, method_list) in enumerate(method_groups.items()):
     ax.grid(True)
     ax.legend()
 
-plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Sémantique PR (BA)", fontsize=14)
+plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Sémantique CO (WS)", fontsize=14)
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 
-output_path = os.path.join(output_dir, "taux_reussite_PR_ba.png")
+output_path = os.path.join(output_dir, "taux_reussite_CO_ws.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 
