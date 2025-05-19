@@ -3,7 +3,7 @@ import csv
 import subprocess
 
 obaf_root_dir = "./benchmark/OBAF/BA"
-output_csv = "obaf_results_BA_TEST.csv"
+output_csv = "obaf_results_BA.csv"
 
 measures = ["S", "D", "U"]
 aggregations = ["sum", "min", "leximin"]

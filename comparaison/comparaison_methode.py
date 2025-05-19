@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import os
 import ast
 
-df = pd.read_csv("obaf_results_WS.csv")
-output_dir = "figures/WS"
+df = pd.read_csv("obaf_results_BA.csv")
+output_dir = "figures/BA"
 os.makedirs(output_dir, exist_ok=True)
 
 def normalize_extension(ext):
@@ -27,32 +27,18 @@ def compare_extensions(returned_exts, true_ext):
 # Groupes de méthodes à afficher
 method_groups = {
     "AR": ["AR"],
-    "CSS_S": ["CSS_S_min", "CSS_S_sum", "CSS_S_leximin"],
-    "CSS_D": ["CSS_D_min", "CSS_D_sum", "CSS_D_leximin"],
     "CSS_U": ["CSS_U_min", "CSS_U_sum", "CSS_U_leximin"]
 }
 
 methods = {
     "AR": "EXT_AR",
-    "CSS_S_min": "CSS_S_min",
-    "CSS_S_sum": "CSS_S_sum",
-    "CSS_S_leximin": "CSS_S_leximin",
-    "CSS_D_min": "CSS_D_min",
-    "CSS_D_sum": "CSS_D_sum",
-    "CSS_D_leximin": "CSS_D_leximin",
     "CSS_U_min": "CSS_U_min",
     "CSS_U_sum": "CSS_U_sum",
     "CSS_U_leximin": "CSS_U_leximin",
 }
 
 custom_colors = {
-    "AR": "#3142D8",         
-    "CSS_S_min": "#8A1538", 
-    "CSS_S_sum": "#F4E150",  
-    "CSS_S_leximin": "#807B7B",  
-    "CSS_D_min": "#8A1538",  
-    "CSS_D_sum": "#F4E150",  
-    "CSS_D_leximin": "#807B7B",  
+    "AR": "#3142D8", 
     "CSS_U_min": "#8A1538",  
     "CSS_U_sum": "#F4E150",  
     "CSS_U_leximin": "#807B7B",  
@@ -85,10 +71,10 @@ for idx, methode in enumerate(methode_list):
     ax.grid(True)
     ax.legend()
 
-plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Méthodes de vote (WS)", fontsize=16)
+plt.suptitle("Comparaison des groupes de méthodes selon la fiabilité - Méthodes de vote (BA)", fontsize=16)
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 
-output_path = os.path.join(output_dir, "taux_reussite_uniforme_vs_non_uniforme_ws.png")
+output_path = os.path.join(output_dir, "taux_reussite_uniforme_vs_non_uniforme_ba.png")
 plt.savefig(output_path, dpi=300)
 plt.close()
 
